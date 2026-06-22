@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blizniaczyzakatek.pl/sitemap.xml
