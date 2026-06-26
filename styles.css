@@ -762,10 +762,54 @@ body.menu-open .mobile-menu {
   box-shadow: var(--shadow);
 }
 
+.home-visual {
+  position: relative;
+  overflow: hidden;
+  background: var(--green-100);
+}
+
+.home-visual::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(180deg, rgba(13, 36, 25, 0.1), rgba(13, 36, 25, 0.28));
+  pointer-events: none;
+}
+
 .home-card img {
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
+}
+
+.segment-label,
+.status-ribbon {
+  position: absolute;
+  z-index: 1;
+  border-radius: 999px;
+  color: var(--white);
+  font-weight: 900;
+}
+
+.segment-label {
+  left: 18px;
+  top: 18px;
+  padding: 8px 12px;
+  background: rgba(20, 55, 38, 0.82);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
+.status-ribbon {
+  right: 18px;
+  bottom: 18px;
+  padding: 12px 18px;
+  background: var(--terracotta);
+  box-shadow: 0 14px 34px rgba(97, 42, 18, 0.24);
+  font-size: clamp(1rem, 1.7vw, 1.34rem);
+  letter-spacing: 0.04em;
 }
 
 .home-body {
@@ -1138,10 +1182,30 @@ body.menu-open .mobile-menu {
   margin-top: 22px;
 }
 
-.location-media img {
-  width: 100%;
+.location-media {
+  display: grid;
+  place-items: center;
+  justify-items: start;
+  padding: clamp(10px, 1.8vw, 18px);
+  border: 1px solid rgba(243, 237, 225, 0.16);
   border-radius: 8px;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+}
+
+.location-media .location-actions {
+  width: 100%;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.location-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(54vh, 560px);
+  object-fit: contain;
+  border-radius: 6px;
 }
 
 .map-panel {
@@ -1629,6 +1693,18 @@ address strong {
     align-items: center;
   }
 
+  .location-grid {
+    grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+    align-items: start;
+  }
+
+  .location-media {
+    justify-self: center;
+    width: 100%;
+    max-width: 760px;
+    margin-top: 74px;
+  }
+
   .plan-grid {
     align-items: start;
   }
@@ -1710,6 +1786,10 @@ address strong {
   .footer-cta,
   .site-footer nav {
     justify-content: center;
+  }
+
+  .location-media {
+    padding: 8px;
   }
 
   .agent-card {
