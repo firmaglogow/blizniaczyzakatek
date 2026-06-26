@@ -812,6 +812,10 @@ body.menu-open .mobile-menu {
   letter-spacing: 0.04em;
 }
 
+.status-ribbon.in-progress {
+  background: var(--green-900);
+}
+
 .home-body {
   padding: 24px;
 }
@@ -828,6 +832,10 @@ body.menu-open .mobile-menu {
 
 .badge.available {
   background: var(--green-500);
+}
+
+.badge.in-progress {
+  background: var(--terracotta);
 }
 
 .home-body h3 {
@@ -907,6 +915,44 @@ body.menu-open .mobile-menu {
 
 .detail-panel-dark p {
   color: rgba(243, 237, 225, 0.78);
+}
+
+.facts-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 28px 0 0;
+}
+
+.facts-tile-grid div {
+  display: grid;
+  align-content: space-between;
+  min-height: 118px;
+  padding: 18px;
+  border: 1px solid rgba(27, 58, 42, 0.14);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(247, 242, 232, 0.92)),
+    var(--cream-2);
+  box-shadow: 0 12px 28px rgba(27, 58, 42, 0.07);
+}
+
+.facts-tile-grid span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.facts-tile-grid strong {
+  display: block;
+  margin-top: 18px;
+  color: var(--green-900);
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2vw, 2.05rem);
+  line-height: 1;
 }
 
 .facts-list {
