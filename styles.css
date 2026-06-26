@@ -928,6 +928,10 @@ body.menu-open .mobile-menu {
   align-items: baseline;
 }
 
+.rooms-list[hidden] {
+  display: none;
+}
+
 .rooms-list strong {
   color: var(--green-900);
   white-space: nowrap;
@@ -936,8 +940,63 @@ body.menu-open .mobile-menu {
 .plan-visuals {
   align-self: stretch;
   display: grid;
-  place-items: center;
+  align-content: center;
+  gap: 18px;
   min-height: 100%;
+}
+
+.plan-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: min(100%, 720px);
+  margin: 0 auto;
+}
+
+.plan-switcher p {
+  margin: 0;
+  color: var(--green-900);
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 2.2vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.plan-tabs {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(104px, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(27, 58, 42, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 16px 40px rgba(27, 58, 42, 0.08);
+}
+
+.plan-tabs button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--green-900);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.plan-tabs button.is-active {
+  background: var(--green-900);
+  color: var(--white);
+  box-shadow: 0 12px 28px rgba(27, 58, 42, 0.18);
 }
 
 .plan-image {
@@ -970,6 +1029,9 @@ body.menu-open .mobile-menu {
 .plan-image-3d-only {
   display: grid;
   place-items: center;
+  width: min(100%, 760px);
+  min-height: clamp(440px, 46vw, 690px);
+  margin: 0 auto;
   background: transparent;
   box-shadow: none;
 }
@@ -989,17 +1051,12 @@ body.menu-open .mobile-menu {
 .plan-image-3d-only img {
   position: relative;
   z-index: 1;
-  width: min(94%, 580px);
-  height: auto;
+  width: min(100%, 680px);
+  max-height: clamp(420px, 44vw, 660px);
+  height: 100%;
   aspect-ratio: auto;
   object-fit: contain;
   background: transparent;
-}
-
-.plan-image-3d-only span {
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
 }
 
 .plan-image span,
@@ -1074,6 +1131,11 @@ body.menu-open .mobile-menu {
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.06);
   font-weight: 800;
+}
+
+.location-actions {
+  display: flex;
+  margin-top: 22px;
 }
 
 .location-media img {
@@ -1272,45 +1334,99 @@ address strong {
 }
 
 .site-footer {
-  padding: 42px 0 92px;
-  background: #14291e;
+  padding: 22px 0 64px;
+  background:
+    linear-gradient(135deg, rgba(195, 98, 53, 0.12), transparent 38%),
+    #14291e;
   color: rgba(243, 237, 225, 0.78);
 }
 
 .footer-grid {
   display: grid;
-  gap: 22px;
+  gap: 16px;
+  align-items: center;
 }
 
-.footer-brand {
-  color: var(--white);
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.footer-logo img {
+  display: block;
+  width: clamp(82px, 7.5vw, 116px);
+  height: auto;
+}
+
+.footer-links {
+  display: grid;
+  gap: 8px;
 }
 
 .site-footer p {
   margin: 0;
   max-width: 540px;
+  color: rgba(243, 237, 225, 0.72);
+  font-size: 0.9rem;
 }
 
 .site-footer nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px 22px;
+  gap: 8px 18px;
+  font-size: 0.9rem;
   font-weight: 800;
+}
+
+.site-footer a {
+  color: rgba(243, 237, 225, 0.9);
 }
 
 .site-footer a:hover {
   color: #efc5a9;
 }
 
+.footer-credit {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  color: rgba(243, 237, 225, 0.64);
+  font-size: 0.84rem;
+}
+
+.footer-credit a {
+  color: var(--cream);
+  font-weight: 900;
+}
+
+.footer-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.footer-cta .button {
+  min-height: 42px;
+  padding: 0 16px;
+  font-size: 0.82rem;
+}
+
+.footer-cta .button-ghost {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--cream);
+}
+
 .footer-bottom {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 32px;
-  padding-top: 22px;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 12px;
   border-top: 1px solid rgba(243, 237, 225, 0.14);
-  font-size: 0.9rem;
+  color: rgba(243, 237, 225, 0.62);
+  font-size: 0.78rem;
 }
 
 .mobile-cta {
@@ -1531,8 +1647,17 @@ address strong {
   }
 
   .footer-grid {
-    grid-template-columns: 1fr 1.2fr auto;
+    grid-template-columns: auto minmax(260px, 1fr) auto auto;
     align-items: center;
+  }
+
+  .footer-credit {
+    justify-items: end;
+    text-align: right;
+  }
+
+  .footer-cta {
+    justify-content: flex-end;
   }
 }
 
@@ -1571,6 +1696,20 @@ address strong {
 
   .site-footer {
     padding-bottom: 116px;
+  }
+
+  .footer-grid,
+  .footer-links,
+  .footer-credit,
+  .footer-cta,
+  .footer-bottom {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .footer-cta,
+  .site-footer nav {
+    justify-content: center;
   }
 
   .agent-card {

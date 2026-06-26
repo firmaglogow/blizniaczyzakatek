@@ -51,6 +51,58 @@
     });
   });
 
+  const planData = {
+    ground: {
+      title: "Rzut parteru",
+      src: "assets/blizniaczy/rzut-3d-transparent.webp",
+      alt: "Rzut 3D parteru z garażem",
+      width: 969,
+      height: 972,
+    },
+    first: {
+      title: "Rzut piętra",
+      src: "assets/blizniaczy/rzut-pietro-transparent.webp",
+      alt: "Rzut 3D piętra z czterema sypialniami i łazienką",
+      width: 1018,
+      height: 917,
+    },
+  };
+  const planTitle = document.querySelector("[data-plan-title]");
+  const planImage = document.querySelector("[data-plan-img]");
+  const planViewer = document.querySelector("[data-plan-viewer]");
+  const planTabs = Array.from(document.querySelectorAll("[data-plan-tab]"));
+  const planLists = Array.from(document.querySelectorAll("[data-plan-list]"));
+
+  function setPlanView(view) {
+    const data = planData[view];
+    if (!data) return;
+
+    if (planTitle) planTitle.textContent = data.title;
+    if (planImage) {
+      planImage.src = data.src;
+      planImage.alt = data.alt;
+      planImage.width = data.width;
+      planImage.height = data.height;
+    }
+    if (planViewer) planViewer.dataset.lightbox = data.src;
+
+    planTabs.forEach((tab) => {
+      const active = tab.dataset.planTab === view;
+      tab.classList.toggle("is-active", active);
+      tab.setAttribute("aria-selected", String(active));
+    });
+
+    planLists.forEach((list) => {
+      const active = list.dataset.planList === view;
+      list.classList.toggle("is-active", active);
+      list.hidden = !active;
+    });
+  }
+
+  planTabs.forEach((tab) => {
+    tab.addEventListener("click", () => setPlanView(tab.dataset.planTab));
+  });
+
   const revealItems = document.querySelectorAll(".reveal");
   if (reduceMotion || !("IntersectionObserver" in window)) {
     revealItems.forEach((item) => item.classList.add("is-visible"));
@@ -71,13 +123,32 @@
 
   const form = document.getElementById("contactForm");
   form?.addEventListener("submit", (event) => {
-    const action = form.getAttribute("action") || "";
-    if (action.includes("[") || !action.trim()) {
-      event.preventDefault();
-      const note = form.querySelector("[data-form-note]");
-      if (note) note.hidden = false;
-      form.reset();
-    }
+    event.preventDefault();
+
+    const data = new FormData(form);
+    const name = String(data.get("name") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const segment = String(data.get("segment") || "").trim();
+    const message = String(data.get("message") || "").trim();
+    const subject = `Zapytanie o Bliźniaczy Zakątek - ${segment || "prezentacja"}`;
+    const bodyLines = [
+      "Dzień dobry,",
+      "",
+      message || "Interesuje mnie Bliźniaczy Zakątek. Proszę o kontakt.",
+      "",
+      `Imię: ${name}`,
+      `Telefon: ${phone}`,
+      email ? `E-mail: ${email}` : "",
+      `Segment: ${segment}`,
+      "",
+      "Źródło: formularz na blizniaczyzakatek.pl",
+    ].filter(Boolean);
+    const mailto = `mailto:daria.lukasik@freehome.com.pl?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+    window.location.href = mailto;
+
+    const note = form.querySelector("[data-form-note]");
+    if (note) note.hidden = false;
   });
 
   const lightbox = document.querySelector("[data-lightbox-modal]");
