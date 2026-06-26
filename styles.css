@@ -812,8 +812,8 @@ body.menu-open .mobile-menu {
   letter-spacing: 0.04em;
 }
 
-.status-ribbon.in-progress {
-  background: var(--green-900);
+.status-ribbon.for-sale {
+  background: var(--terracotta);
 }
 
 .home-body {
@@ -835,7 +835,7 @@ body.menu-open .mobile-menu {
 }
 
 .badge.in-progress {
-  background: var(--terracotta);
+  background: var(--green-500);
 }
 
 .home-body h3 {
