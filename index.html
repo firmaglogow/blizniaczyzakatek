@@ -32,7 +32,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260715-9" />
 
     <script type="application/ld+json">
       {
@@ -87,12 +87,12 @@
                 "@type": "Person",
                 "name": "Daria Łukasik",
                 "telephone": "+48518092404",
-                "email": "daria.lukasik@freehome.com.pl"
+                "email": "daria.lukasik@freehome.pl"
               },
               { "@type": "Person", "name": "Grzegorz Łukasik", "identifier": "PPRN 25356" }
             ],
             "telephone": "+48518092404",
-            "email": "daria.lukasik@freehome.com.pl"
+            "email": "daria.lukasik@freehome.pl"
           }
         ]
       }
@@ -123,6 +123,7 @@
           <span></span>
         </button>
       </div>
+      <span class="scroll-progress" data-scroll-progress aria-hidden="true"></span>
     </header>
 
     <div class="mobile-menu" data-mobile-menu aria-hidden="true">
@@ -142,7 +143,7 @@
       <section class="hero" id="top" aria-label="Bliźniaczy Zakątek">
         <img class="hero-bg" src="assets/blizniaczy/hero-ogrod.webp" alt="" width="1200" height="676" fetchpriority="high" />
         <div class="hero-shade"></div>
-        <div class="hero-content reveal">
+        <div class="hero-content reveal" data-hero-content>
           <h1>Bliźniaczy Zakątek</h1>
           <p class="hero-lead">Nowy bliźniak z garażem w bryle na pograniczu Głogowa i Szczyglic.</p>
           <div class="hero-actions">
@@ -165,13 +166,15 @@
             </p>
           </div>
           <div class="intro-card reveal">
-            <strong>559 000 zł</strong>
-            <span>cena segmentu</span>
+            <div class="intro-price">
+              <strong data-counter data-count-value="559000" data-count-suffix=" zł" aria-label="Cena 559 000 zł">559 000 zł</strong>
+              <span>cena segmentu</span>
+            </div>
             <p>Nowy bliźniak z garażem w bryle, działką ok. 500 m2 i przestrzenią dla całej rodziny.</p>
           </div>
         </div>
 
-        <div class="container feature-grid">
+        <div class="container feature-grid" data-reveal-group>
           <article class="feature reveal" data-icon="01">
             <span>01</span>
             <h3>Kameralnie</h3>
@@ -209,7 +212,7 @@
           <span>130,17 m2 każdy</span>
         </div>
 
-        <div class="container homes-grid">
+        <div class="container homes-grid" data-reveal-group>
           <article class="home-card reveal">
             <div class="home-visual">
               <img src="assets/blizniaczy/front.webp" alt="Segment lewy domu w zabudowie bliźniaczej" width="1200" height="676" loading="lazy" />
@@ -257,11 +260,11 @@
           <article class="detail-panel reveal">
             <p class="eyebrow">Dane szczegółowe</p>
             <h2>Oferta w liczbach.</h2>
-            <div class="facts-tile-grid" aria-label="Najważniejsze dane oferty">
-              <div><span>Cena</span><strong>559 000 PLN</strong></div>
-              <div><span>Powierzchnia</span><strong>130,17 m2</strong></div>
-              <div><span>Pokoje</span><strong>5</strong></div>
-              <div><span>Działka</span><strong>500 m2</strong></div>
+            <div class="facts-tile-grid" aria-label="Najważniejsze dane oferty" data-sequence>
+              <div><span>Cena</span><strong data-counter data-count-value="559000" data-count-suffix=" PLN">559 000 PLN</strong></div>
+              <div><span>Powierzchnia</span><strong data-counter data-count-value="130.17" data-count-decimals="2" data-count-suffix=" m2">130,17 m2</strong></div>
+              <div><span>Pokoje</span><strong data-counter data-count-value="5">5</strong></div>
+              <div><span>Działka</span><strong data-counter data-count-value="500" data-count-suffix=" m2">500 m2</strong></div>
               <div><span>Garaż</span><strong>w bryle</strong></div>
               <div><span>Rok budowy</span><strong>2026</strong></div>
               <div><span>Status</span><strong>2 segmenty</strong></div>
@@ -277,7 +280,7 @@
               wykonano ścianki działowe na obu poziomach, garaż ma bramę otwieraną na pilota,
               a budynek przygotowano pod nowoczesne, energooszczędne rozwiązania.
             </p>
-            <ul class="standard-list">
+            <ul class="standard-list" data-sequence>
               <li>Suporex Solbet klasa 450, grubość 24 cm</li>
               <li>Ocieplenie styropianem EPS 038, grubość 15 cm</li>
               <li>Dachówka betonowa Braas Celtycka Lumino</li>
@@ -299,7 +302,14 @@
               Sercem parteru jest salon z aneksem kuchennym o powierzchni ponad 38 m2. Na piętrze
               zaplanowano cztery niezależne sypialnie, łazienkę oraz dodatkową garderobę.
             </p>
-            <ul class="rooms-list is-active" data-plan-list="ground">
+            <div class="plan-switcher plan-switcher-mobile" aria-label="Wybierz rzut domu">
+              <p data-plan-title>Rzut parteru</p>
+              <div class="plan-tabs" role="tablist" aria-label="Rzuty kondygnacji">
+                <button class="is-active" type="button" role="tab" aria-selected="true" data-plan-tab="ground">Parter</button>
+                <button type="button" role="tab" aria-selected="false" tabindex="-1" data-plan-tab="first">Piętro</button>
+              </div>
+            </div>
+            <ul class="rooms-list is-active" data-plan-list="ground" data-sequence>
               <li><span>Przedpokój</span><strong>4,83 m2</strong></li>
               <li><span>Pomieszczenie gospodarcze</span><strong>3,08 m2</strong></li>
               <li><span>WC</span><strong>1,94 m2</strong></li>
@@ -308,7 +318,7 @@
               <li><span>Garaż w bryle</span><strong>16,50 m2</strong></li>
               <li><span>Powierzchnia całkowita domu</span><strong>130,17 m2</strong></li>
             </ul>
-            <ul class="rooms-list" data-plan-list="first" hidden>
+            <ul class="rooms-list" data-plan-list="first" data-sequence hidden>
               <li><span>Sypialnia główna</span><strong>13,00 m2</strong></li>
               <li><span>Sypialnia 2</span><strong>12,00 m2</strong></li>
               <li><span>Sypialnia 3</span><strong>11,00 m2</strong></li>
@@ -323,10 +333,10 @@
               <p data-plan-title>Rzut parteru</p>
               <div class="plan-tabs" role="tablist" aria-label="Rzuty kondygnacji">
                 <button class="is-active" type="button" role="tab" aria-selected="true" data-plan-tab="ground">Parter</button>
-                <button type="button" role="tab" aria-selected="false" data-plan-tab="first">Piętro</button>
+                <button type="button" role="tab" aria-selected="false" tabindex="-1" data-plan-tab="first">Piętro</button>
               </div>
             </div>
-            <button class="plan-image plan-image-3d-only" type="button" data-plan-viewer data-lightbox="assets/blizniaczy/rzut-3d-transparent.webp">
+            <button class="plan-image plan-image-3d-only" type="button" data-plan-viewer data-lightbox="assets/blizniaczy/rzut-3d-transparent.webp" aria-label="Powiększ rzut parteru">
               <img
                 src="assets/blizniaczy/rzut-3d-transparent.webp"
                 alt="Rzut 3D parteru z garażem"
@@ -349,7 +359,7 @@
             prosta, uporządkowana i łatwa do pokochania na lata.
           </p>
         </div>
-        <div class="container image-pair">
+        <div class="container image-pair" data-reveal-group>
           <button type="button" class="gallery-tile wide reveal" data-lightbox="assets/blizniaczy/front.webp">
             <img src="assets/blizniaczy/front.webp" alt="Frontowa wizualizacja bliźniaka" width="1200" height="676" loading="lazy" />
             <span>Elewacja frontowa</span>
@@ -371,7 +381,7 @@
               niska zabudowa pozwalają odpocząć od miejskiego zgiełku. Jednocześnie dojazd do
               miasta pozostaje szybki i wygodny.
             </p>
-            <div class="nearby">
+            <div class="nearby" data-sequence>
               <span>Pogranicze Głogowa i Szczyglic</span>
               <span>Szkoły i sklepy w okolicy</span>
               <span>Lasy, łąki, pola i podmiejski spokój</span>
@@ -405,7 +415,7 @@
           <p class="eyebrow">Klimat okolicy</p>
           <h2>Zobacz widoki z drona.</h2>
         </div>
-        <div class="container gallery-grid drone-grid">
+        <div class="container gallery-grid drone-grid" data-reveal-group>
           <button type="button" class="gallery-tile large reveal" data-lightbox="assets/blizniaczy/okolica-dron-1.webp">
             <img src="assets/blizniaczy/okolica-dron-1.webp" alt="Widok z drona na pola i Głogów w oddali" width="1400" height="788" loading="lazy" />
           </button>
@@ -427,7 +437,7 @@
             jasny salon, kuchnia z wyjściem na ogród, łazienka oraz sypialnie pod skosami.
           </p>
         </div>
-        <div class="container gallery-grid interiors-grid">
+        <div class="container gallery-grid interiors-grid" data-reveal-group>
           <button type="button" class="gallery-tile large reveal" data-lightbox="assets/blizniaczy/wnetrze-salon.webp">
             <img src="assets/blizniaczy/wnetrze-salon.webp" alt="Jasny salon z aneksem kuchennym" width="1400" height="788" loading="lazy" />
           </button>
@@ -452,7 +462,7 @@
             <p class="eyebrow">FAQ</p>
             <h2>Najczęstsze pytania.</h2>
           </div>
-          <div class="faq-list reveal">
+          <div class="faq-list reveal" data-sequence>
             <details>
               <summary>Jaki jest standard wykończenia?</summary>
               <p>Dom jest sprzedawany w stanie surowym zamkniętym z wykonaną elewacją, oknami trzyszybowymi, elektrycznymi roletami zewnętrznymi, ściankami działowymi i bramą garażową na pilota.</p>
@@ -488,7 +498,7 @@
                 <span>Kontakt z agentem: FREE HOME</span>
                 <h3>Daria Łukasik</h3>
                 <a href="tel:+48518092404">tel. +48 518 092 404</a>
-                <a href="mailto:daria.lukasik@freehome.com.pl">daria.lukasik@freehome.com.pl</a>
+                <a href="mailto:daria.lukasik@freehome.pl">daria.lukasik@freehome.pl</a>
               </div>
             </article>
             <address>
@@ -503,7 +513,7 @@
             </div>
           </div>
 
-          <form class="contact-form reveal" id="contactForm" action="mailto:daria.lukasik@freehome.com.pl" method="post">
+          <form class="contact-form reveal" id="contactForm" action="mailto:daria.lukasik@freehome.pl" method="post">
             <label>
               Imię
               <input name="name" autocomplete="name" required />
@@ -563,10 +573,10 @@
           <a class="button button-ghost" href="#kontakt">Umów prezentację</a>
           <a class="button button-ghost" href="https://maps.app.goo.gl/G1Yh3AZwrydtbwH59" target="_blank" rel="noopener">Mapa dojazdu</a>
         </div>
-      </div>
-      <div class="container footer-bottom">
-        <span>© <span id="year"></span> Bliźniaczy Zakątek</span>
-        <span>Licencja PPRN 25356</span>
+        <div class="footer-bottom">
+          <span>© <span id="year"></span> Bliźniaczy Zakątek</span>
+          <span>Licencja PPRN 25356</span>
+        </div>
       </div>
     </footer>
 
@@ -580,8 +590,9 @@
       <button class="lightbox-nav prev" type="button" data-lightbox-prev aria-label="Poprzednie zdjęcie">‹</button>
       <img src="" alt="" data-lightbox-image />
       <button class="lightbox-nav next" type="button" data-lightbox-next aria-label="Następne zdjęcie">›</button>
+      <span class="lightbox-count" data-lightbox-count aria-live="polite"></span>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=20260715-9"></script>
   </body>
 </html>

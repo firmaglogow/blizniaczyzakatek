@@ -4,16 +4,75 @@
   const menuToggle = document.querySelector("[data-menu-toggle]");
   const mobileMenu = document.querySelector("[data-mobile-menu]");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const desktopMotion = window.matchMedia("(min-width: 960px)");
+  const hero = document.querySelector(".hero");
+  const scrollProgress = document.querySelector("[data-scroll-progress]");
+  const navLinks = Array.from(document.querySelectorAll('.desktop-nav a[href^="#"]'));
+  const trackedSections = Array.from(document.querySelectorAll("main > section"));
 
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
 
-  function updateHeader() {
-    header?.classList.toggle("is-scrolled", window.scrollY > 36);
+  if (window.location.hash) {
+    const anchorTarget = document.querySelector(window.location.hash);
+    const fontsReady = document.fonts?.ready || Promise.resolve();
+    fontsReady.then(() => {
+      window.requestAnimationFrame(() => {
+        if (!anchorTarget) return;
+        const headerOffset = Number.parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue("--header-h"),
+        ) + 18;
+        const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = "auto";
+        window.scrollTo(0, anchorTarget.offsetTop - headerOffset);
+        window.requestAnimationFrame(() => {
+          document.documentElement.style.scrollBehavior = previousScrollBehavior;
+        });
+      });
+    });
   }
 
-  updateHeader();
-  window.addEventListener("scroll", updateHeader, { passive: true });
+  function updateScrollUi() {
+    header?.classList.toggle("is-scrolled", window.scrollY > 36);
+
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0;
+    if (scrollProgress) scrollProgress.style.transform = `scaleX(${progress})`;
+
+    if (hero && desktopMotion.matches && !reduceMotion) {
+      hero.style.setProperty("--hero-shift", `${Math.min(54, window.scrollY * 0.075)}px`);
+    } else {
+      hero?.style.setProperty("--hero-shift", "0px");
+    }
+
+    const navMarker = window.innerHeight * 0.46;
+    let activeSection = trackedSections[0];
+    trackedSections.forEach((section) => {
+      if (section.getBoundingClientRect().top <= navMarker) activeSection = section;
+    });
+    let activeHref = activeSection?.id ? `#${activeSection.id}` : "";
+    if (activeSection?.classList.contains("architecture")) activeHref = "#rozklad";
+    if (activeSection?.id === "lokalizacja") activeHref = "#galeria";
+    if (activeSection?.classList.contains("faq-section")) activeHref = "#kontakt";
+    navLinks.forEach((link) => {
+      const active = link.getAttribute("href") === activeHref;
+      if (active) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
+  let scrollFrame = 0;
+  function scheduleScrollUi() {
+    if (scrollFrame) return;
+    scrollFrame = window.requestAnimationFrame(() => {
+      updateScrollUi();
+      scrollFrame = 0;
+    });
+  }
+
+  updateScrollUi();
+  window.addEventListener("scroll", scheduleScrollUi, { passive: true });
+  window.addEventListener("resize", scheduleScrollUi, { passive: true });
 
   function setMenu(open) {
     body.classList.toggle("menu-open", open);
@@ -67,29 +126,38 @@
       height: 917,
     },
   };
-  const planTitle = document.querySelector("[data-plan-title]");
+  const planTitles = Array.from(document.querySelectorAll("[data-plan-title]"));
   const planImage = document.querySelector("[data-plan-img]");
   const planViewer = document.querySelector("[data-plan-viewer]");
   const planTabs = Array.from(document.querySelectorAll("[data-plan-tab]"));
   const planLists = Array.from(document.querySelectorAll("[data-plan-list]"));
+  let activePlanView = "ground";
+  let planChangeTimer = 0;
 
-  function setPlanView(view) {
+  function applyPlanView(view) {
     const data = planData[view];
     if (!data) return;
 
-    if (planTitle) planTitle.textContent = data.title;
+    activePlanView = view;
+    planTitles.forEach((title) => {
+      title.textContent = data.title;
+    });
     if (planImage) {
       planImage.src = data.src;
       planImage.alt = data.alt;
       planImage.width = data.width;
       planImage.height = data.height;
     }
-    if (planViewer) planViewer.dataset.lightbox = data.src;
+    if (planViewer) {
+      planViewer.dataset.lightbox = data.src;
+      planViewer.setAttribute("aria-label", `Powiększ ${data.title.toLowerCase()}`);
+    }
 
     planTabs.forEach((tab) => {
       const active = tab.dataset.planTab === view;
       tab.classList.toggle("is-active", active);
       tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
     });
 
     planLists.forEach((list) => {
@@ -97,10 +165,42 @@
       list.classList.toggle("is-active", active);
       list.hidden = !active;
     });
+
+    window.requestAnimationFrame(() => planViewer?.classList.remove("is-switching"));
+  }
+
+  function setPlanView(view) {
+    if (!planData[view] || view === activePlanView) return;
+    window.clearTimeout(planChangeTimer);
+    planViewer?.classList.add("is-switching");
+    planChangeTimer = window.setTimeout(() => applyPlanView(view), reduceMotion ? 0 : 180);
   }
 
   planTabs.forEach((tab) => {
     tab.addEventListener("click", () => setPlanView(tab.dataset.planTab));
+    tab.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      const nextView = tab.dataset.planTab === "ground" ? "first" : "ground";
+      setPlanView(nextView);
+      Array.from(tab.parentElement.querySelectorAll("[data-plan-tab]"))
+        .find((item) => item.dataset.planTab === nextView)
+        ?.focus();
+    });
+  });
+
+  document.querySelectorAll("[data-reveal-group]").forEach((group) => {
+    Array.from(group.children).forEach((item, index) => {
+      if (item.classList.contains("reveal")) {
+        item.style.setProperty("--reveal-delay", `${index * (window.innerWidth < 700 ? 55 : 90)}ms`);
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-sequence]").forEach((group) => {
+    Array.from(group.children).forEach((item, index) => {
+      item.style.setProperty("--sequence-delay", `${index * 55}ms`);
+    });
   });
 
   const revealItems = document.querySelectorAll(".reveal");
@@ -120,6 +220,87 @@
 
     revealItems.forEach((item) => observer.observe(item));
   }
+
+  const counters = Array.from(document.querySelectorAll("[data-counter]"));
+  const numberFormatters = new Map();
+
+  function formatCounter(counter, value) {
+    const decimals = Number(counter.dataset.countDecimals || 0);
+    const formatterKey = String(decimals);
+    if (!numberFormatters.has(formatterKey)) {
+      numberFormatters.set(
+        formatterKey,
+        new Intl.NumberFormat("pl-PL", {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }),
+      );
+    }
+    return `${numberFormatters.get(formatterKey).format(value)}${counter.dataset.countSuffix || ""}`;
+  }
+
+  function animateCounter(counter) {
+    if (counter.dataset.counted === "true") return;
+    counter.dataset.counted = "true";
+    const target = Number(counter.dataset.countValue || 0);
+    const duration = 1150;
+    const start = performance.now();
+
+    function frame(now) {
+      const elapsed = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - elapsed, 3);
+      counter.textContent = formatCounter(counter, target * eased);
+      if (elapsed < 1) window.requestAnimationFrame(frame);
+      else counter.textContent = formatCounter(counter, target);
+    }
+
+    window.requestAnimationFrame(frame);
+  }
+
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    counters.forEach((counter) => {
+      counter.textContent = formatCounter(counter, Number(counter.dataset.countValue || 0));
+      counter.dataset.counted = "true";
+    });
+  } else {
+    counters.forEach((counter) => {
+      counter.textContent = formatCounter(counter, 0);
+    });
+    const counterObserver = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          animateCounter(entry.target);
+          obs.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.55 },
+    );
+    counters.forEach((counter) => counterObserver.observe(counter));
+  }
+
+  const contactTargets = [document.querySelector("#kontakt"), document.querySelector(".site-footer")].filter(Boolean);
+  if ("IntersectionObserver" in window && contactTargets.length) {
+    const visibleContactTargets = new Set();
+    const contactObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) visibleContactTargets.add(entry.target);
+        else visibleContactTargets.delete(entry.target);
+      });
+      body.classList.toggle("contact-in-view", visibleContactTargets.size > 0);
+    });
+    contactTargets.forEach((target) => contactObserver.observe(target));
+  }
+
+  const faqItems = Array.from(document.querySelectorAll(".faq-list details"));
+  faqItems.forEach((item) => {
+    item.addEventListener("toggle", () => {
+      if (!item.open) return;
+      faqItems.forEach((other) => {
+        if (other !== item) other.open = false;
+      });
+    });
+  });
 
   const form = document.getElementById("contactForm");
   form?.addEventListener("submit", (event) => {
@@ -144,7 +325,7 @@
       "",
       "Źródło: formularz na blizniaczyzakatek.pl",
     ].filter(Boolean);
-    const mailto = `mailto:daria.lukasik@freehome.com.pl?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+    const mailto = `mailto:daria.lukasik@freehome.pl?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
     window.location.href = mailto;
 
     const note = form.querySelector("[data-form-note]");
@@ -156,6 +337,7 @@
   const closeButton = document.querySelector("[data-lightbox-close]");
   const prevButton = document.querySelector("[data-lightbox-prev]");
   const nextButton = document.querySelector("[data-lightbox-next]");
+  const lightboxCount = document.querySelector("[data-lightbox-count]");
   const triggers = Array.from(document.querySelectorAll("[data-lightbox]"));
   let activeIndex = 0;
   let lastFocus = null;
@@ -166,10 +348,14 @@
     if (!trigger || !lightboxImage) return;
 
     activeIndex = index;
+    lightbox?.classList.add("is-changing");
     lightboxImage.src = trigger.dataset.lightbox || "";
     const sourceImage = trigger.querySelector("img");
     lightboxImage.alt = sourceImage?.alt || "Zdjęcie inwestycji Bliźniaczy Zakątek";
+    if (lightboxCount) lightboxCount.textContent = `${index + 1} / ${triggers.length}`;
   }
+
+  lightboxImage?.addEventListener("load", () => lightbox?.classList.remove("is-changing"));
 
   function openLightbox(index) {
     if (!lightbox) return;
@@ -185,6 +371,7 @@
     if (!lightbox?.classList.contains("open")) return;
     body.classList.remove("lightbox-open");
     lightbox.classList.remove("open");
+    lightbox.classList.remove("is-changing");
     lightbox.setAttribute("aria-hidden", "true");
     if (lightboxImage) lightboxImage.src = "";
     if (lastFocus instanceof HTMLElement) lastFocus.focus();
